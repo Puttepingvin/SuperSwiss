@@ -3,6 +3,70 @@ generator client {
 }
 
 datasource db {
-    provider = "mysql"
-    url      = env("DATABASE_URL")
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Game {
+  id            Int        @id @default(autoincrement())
+  whitePlayer   Player     @relation("WhitePlayer", fields: [whitePlayerId], references: [id])
+  whitePlayerId Int
+  blackPlayer   Player     @relation("BlackPlayer", fields: [blackPlayerId], references: [id])
+  blackPlayerId Int
+  tournament    Tournament @relation(fields: [tournamentId], references: [id])
+  tournamentId  Int
+  round         Round      @relation(fields: [roundId], references: [id])
+  roundId       Int
+  result        Result
+}
+
+model Player {
+  id                         Int                          @id @default(autoincrement())
+  givenName                  String?                      @db.VarChar(255)
+  surname                    String?                      @db.VarChar(255)
+  birthyear                  Int
+  deleted                    Boolean                      @db.TinyInt
+  whiteGames                 Game[]                       @relation("WhitePlayer")
+  blackGames                 Game[]                       @relation("BlackPlayer")
+  elo                        Int
+  tournamentPlayerStatistics TournamentPlayerStatistics[]
+  present                    Boolean                      @default(true) @db.TinyInt
+}
+
+model Round {
+  id           Int        @id @default(autoincrement())
+  tournament   Tournament @relation(fields: [tournamentId], references: [id])
+  tournamentId Int
+  date         DateTime   @default(now())
+  finished     Boolean    @default(false)
+  games        Game[]
+}
+
+model TournamentPlayerStatistics {
+  id           Int        @id @default(autoincrement())
+  tournament   Tournament @relation(fields: [tournamentId], references: [id])
+  tournamentId Int
+  player       Player     @relation(fields: [playerId], references: [id])
+  playerId     Int
+  whitebalance Int        @default(0)
+  score        Decimal    @default(0) @db.Decimal(10, 0)
+
+  @@unique([tournamentId, playerId], name: "TournamentPlayerCombo")
+}
+
+model Tournament {
+  id                         Int                          @id @default(autoincrement())
+  startdate                  DateTime                     @default(now())
+  active                     Boolean                      @default(false)
+  name                       String                       @default("UNDEFINED")
+  games                      Game[]
+  rounds                     Round[]
+  tournamentPlayerStatistics TournamentPlayerStatistics[]
+}
+
+enum Result {
+  UNFINISHED
+  DRAW
+  WHITE_WON
+  BLACK_WON
 }
