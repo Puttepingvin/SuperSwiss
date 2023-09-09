@@ -4,6 +4,8 @@ import Players from "@/app/players/page";
 import { Prisma, Tournament, Player, Round, Game, Result } from "@prisma/client";
 import { GET as GetTournament } from "../tournament/route";
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: Request) {
     let round = await prisma.round.findFirst({
         orderBy: { date: "desc" },
