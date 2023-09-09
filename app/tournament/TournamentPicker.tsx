@@ -10,6 +10,7 @@ export default function TournamentPicker() {
     useEffect(() => {
         fetch("/api/tournaments", {
             method: "GET",
+            cache: "no-cache",
             headers: {
                 "content-type": "application/json",
             },

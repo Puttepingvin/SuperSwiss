@@ -11,8 +11,8 @@ export default function NavBar() {
         <a href={pagesEnglish[pages.indexOf(page)]} key={pagesEnglish[pages.indexOf(page)]}>
             <li
                 className={
-                    "w-fill hover:bg-yellow-50 p-2 " +
-                    (pagesEnglish[pages.indexOf(page)] === pathname ? "bg-yellow-50 border-r-2 border-r-yellow-700" : "")
+                    "inline-block hover:bg-yellow-50 p-2 " +
+                    (pagesEnglish[pages.indexOf(page)] === pathname ? "bg-yellow-50 border-b-2 border-b-yellow-700" : "")
                 }
             >
                 {page}
@@ -20,7 +20,7 @@ export default function NavBar() {
         </a>
     ));
     return (
-        <nav className="w-32 text-right h-screen flex-none border-r-2 pt-5">
+        <nav className="w-full flex-none border-b-2">
             <ul className="w-fill">{navElements}</ul>
         </nav>
     );

@@ -165,6 +165,7 @@ export default function Seeder() {
     useEffect(() => {
         fetch("/api/players", {
             method: "GET",
+            cache: "no-cache",
         })
             .then((res) => res.json())
             .then((json) => {
@@ -173,6 +174,7 @@ export default function Seeder() {
             });
         fetch("/api/active-round", {
             method: "GET",
+            cache: "no-cache",
         })
             .then((res) => res.json())
             .then((json: RoundWithGames) => {
@@ -186,32 +188,37 @@ export default function Seeder() {
     if (!round) return <p>Ingen rond existerar</p>;
 
     const unseeded = players
-        .filter((p) => p.present)
-        .map(
-            (player) =>
-                !IsSeeded(player, round) && (
-                    <tr key={player.id}>
-                        <td className="px-2">
-                            <b className="text-xl">{player.givenName} </b>
-                        </td>
-                        <td className="px-2">{player.surname}</td>
-                        <td className="px-2 flex">
-                            <select
-                                className="p-1 text-white bg-yellow-700 m-2 w-full"
-                                onChange={(e) => {
-                                    ImplementMatching([{ white: player, black: players.find((p) => p.id === +e.target.value)! }], round);
-                                }}
-                                defaultValue="DEFAULT"
-                            >
-                                <option disabled hidden value="DEFAULT" key="-2">
-                                    Välj motståndare...
-                                </option>
-                                {playerDropdown(players.filter((p) => p.id != player.id && p.present && !IsSeeded(p, round)))}
-                            </select>
-                        </td>
-                    </tr>
-                )
-        );
+        .filter((p) => p.present && !IsSeeded(p, round))
+        .map((player) => (
+            <tr key={player.id}>
+                <td className="px-2">
+                    <b className="text-xl">{player.givenName} </b>
+                </td>
+                <td className="px-2">{player.surname}</td>
+                <td className="px-2 flex min-w-[160]">
+                    <select
+                        className="p-1 text-white bg-yellow-700 m-2 w-full"
+                        onChange={(e) => {
+                            ImplementMatching(
+                                [
+                                    {
+                                        white: player,
+                                        black: players.find((p) => p.id === +e.target.value)!,
+                                    },
+                                ],
+                                round
+                            );
+                        }}
+                        defaultValue="DEFAULT"
+                    >
+                        <option disabled hidden value="DEFAULT" key="-2">
+                            Välj motståndare...
+                        </option>
+                        {playerDropdown(players.filter((p) => p.id != player.id && p.present && !IsSeeded(p, round)))}
+                    </select>
+                </td>
+            </tr>
+        ));
 
     const seeded = round.games.map((game) => (
         <tr key={game.id}>
@@ -263,58 +270,66 @@ export default function Seeder() {
         </tr>
     ));
 
+    console.log(unseeded);
+
     return (
         <>
-        <h1 className="text-xl">Rond nummer {round.id}, startade {round.date.toLocaleString()}</h1>
-        <div className="flex min-h-full flex-1">
-            <div className="flex-1 border-r-2 border-r-yellow-700 h-full ">
-                <table className="border-l-2 mb-2">
-                    <thead>
-                        <tr className="border-b-2">
-                            <td className="p-2">
-                                <b>Förnamn</b>
-                            </td>
-                            <td className="p-2">
-                                <b>Efternamn</b>
-                            </td>
-                            <td className="p-2">
-                                <b>Manuell match</b>
-                            </td>
-                        </tr>
-                    </thead>
-                    <tbody>{unseeded}</tbody>
-                </table>
-                <button
-                    type="button"
-                    className="p-2 rounded border-1 bg-yellow-700 text-white"
-                    onClick={() =>
-                        MakeSeeding(
-                            players.filter((p) => p.present),
-                            round
-                        )
-                    }
-                >
-                    Skapa lottning
-                </button>
+            <h1 className="text-xl">
+                Rond nummer {round.id}, startade {round.date.toLocaleString()}
+            </h1>
+            <div className="flex flex-wrap min-h-full flex-1">
+                {unseeded?.length > 0 && (
+                    <div className="flex-1 border-r-2 border-r-yellow-700">
+                        <table className="border-l-2 mb-2">
+                            <thead>
+                                <tr className="border-b-2">
+                                    <td className="p-2">
+                                        <b>Förnamn</b>
+                                    </td>
+                                    <td className="p-2">
+                                        <b>Efternamn</b>
+                                    </td>
+                                    <td className="p-2 whitespace-nowrap">
+                                        <b>Manuell match</b>
+                                    </td>
+                                </tr>
+                            </thead>
+                            <tbody>{unseeded}</tbody>
+                        </table>
+                        <button
+                            type="button"
+                            className="p-2 rounded border-1 bg-yellow-700 text-white"
+                            onClick={() =>
+                                MakeSeeding(
+                                    players.filter((p) => p.present),
+                                    round
+                                )
+                            }
+                        >
+                            Skapa lottning
+                        </button>
+                    </div>
+                )}
+                {seeded.length > 0 && (
+                    <div className="flex-[2_2_0%] p-2">
+                        <table className="border-l-2 mb-2">
+                            <thead className="border-b-2">
+                                <tr>
+                                    <th className="p-2">Vit</th>
+                                    <th className="p-2">-</th>
+                                    <th className="p-2">Svart</th>
+                                    <th className="p-2 whitespace-nowrap">Byt färg</th>
+                                    <th className="p-2">Avmatcha</th>
+                                </tr>
+                            </thead>
+                            <tbody>{seeded}</tbody>
+                        </table>
+                        <button type="button" className="p-2 rounded border-1 bg-yellow-700 text-white" onClick={() => FinishRound()}>
+                            Avsluta rond
+                        </button>
+                    </div>
+                )}
             </div>
-            <div className="flex-[2_2_0%] h-full p-2">
-                <table className="border-l-2 mb-2">
-                    <thead className="border-b-2">
-                        <tr>
-                            <th className="p-2">Vit</th>
-                            <th className="p-2">-</th>
-                            <th className="p-2">Svart</th>
-                            <th className="p-2">Byt färg</th>
-                            <th className="p-2">Avmatcha</th>
-                        </tr>
-                    </thead>
-                    <tbody>{seeded}</tbody>
-                </table>
-                <button type="button" className="p-2 rounded border-1 bg-yellow-700 text-white" onClick={() => FinishRound()}>
-                    Avsluta rond
-                </button>
-            </div>
-        </div>
         </>
     );
 }

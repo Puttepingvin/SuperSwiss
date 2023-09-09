@@ -10,6 +10,7 @@ export default function PlayerList() {
     useEffect(() => {
         fetch("/api/players", {
             method: "GET",
+            cache: "no-cache",
             headers: {
                 "content-type": "application/json",
             },

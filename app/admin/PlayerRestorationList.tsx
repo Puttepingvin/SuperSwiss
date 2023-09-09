@@ -12,6 +12,7 @@ export default function PlayerRestorationList() {
     useEffect(() => {
         fetch("/api/delete-player", {
             method: "GET",
+            cache: "no-cache",
             headers: {
                 "content-type": "application/json",
             },
