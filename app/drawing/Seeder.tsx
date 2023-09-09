@@ -3,9 +3,6 @@
 import { Player, Game, Round, Result as GameResult } from "@prisma/client";
 import { useState, useEffect } from "react";
 import { Seed, Pairing } from "./seeding-algorithm";
-import { Result } from "postcss";
-import next from "next";
-import Players from "../players/page";
 import Image from "next/image";
 import swap from "../images/swap-32.png";
 import cancel from "../images/cancel-32.png";
@@ -267,7 +264,9 @@ export default function Seeder() {
     ));
 
     return (
-        <div className="flex h-full flex-1">
+        <>
+        <h1 className="text-xl">Rond nummer {round.id}, startade {round.date.toLocaleString()}</h1>
+        <div className="flex min-h-full flex-1">
             <div className="flex-1 border-r-2 border-r-yellow-700 h-full ">
                 <table className="border-l-2 mb-2">
                     <thead>
@@ -316,5 +315,6 @@ export default function Seeder() {
                 </button>
             </div>
         </div>
+        </>
     );
 }
