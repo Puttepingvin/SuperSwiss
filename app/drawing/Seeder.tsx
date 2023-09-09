@@ -165,7 +165,7 @@ export default function Seeder() {
     useEffect(() => {
         fetch("/api/players", {
             method: "GET",
-            cache: "no-cache",
+            cache: "no-store",
         })
             .then((res) => res.json())
             .then((json) => {
@@ -174,7 +174,7 @@ export default function Seeder() {
             });
         fetch("/api/active-round", {
             method: "GET",
-            cache: "no-cache",
+            cache: "no-store",
         })
             .then((res) => res.json())
             .then((json: RoundWithGames) => {
