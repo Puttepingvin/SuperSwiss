@@ -63,6 +63,8 @@ export default function TournamentPicker() {
             .then((json: Tournament) => {
                 setTournaments([...tournaments, json]);
             });
+
+        (document.getElementById("newTournamentForm") as HTMLFormElement).reset();
     }
 
     if (isLoading) return <p>Loading...</p>;
@@ -93,7 +95,7 @@ export default function TournamentPicker() {
                 </button>
             </form>
             <div className="border-t-2 mt-4"></div>
-            <form onSubmit={AddTournament}>
+            <form id="newTournamentForm" onSubmit={AddTournament}>
                 <b>Ny turnering</b>
                 <br></br>
                 <input name="name" className="p-1 m-1 border-2" required></input>

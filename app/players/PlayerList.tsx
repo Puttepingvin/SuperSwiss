@@ -46,6 +46,7 @@ export default function PlayerList() {
         const formData = new FormData(form);
 
         AddPlayer(formData.get("givenName") as string, formData.get("surname") as string, formData.get("birthyear") as string);
+        (document.getElementById("addPlayerForm") as HTMLFormElement).reset();
     }
 
     async function AddPlayer(givenName: string | null, surname: string, birthyear: string) {
@@ -81,7 +82,7 @@ export default function PlayerList() {
         .sort((a, b) => 0 - ((a.givenName?.toLowerCase() ?? "") < (b.givenName?.toLowerCase() ?? "") ? 1 : -1))
         .map((player) => (
             <tr className="" key={player.id}>
-                <td className="border-r-2 px-2">
+                <td className="border-r-2 px-2 text-right">
                     <input
                         id={"checkbox-player-" + player.id}
                         type="checkbox"
@@ -106,11 +107,13 @@ export default function PlayerList() {
         ));
     return (
         <>
-            <table className="">
+            <h2 className="text-lg">
+                Antal närvarande: <b>{players.filter((p) => p.present).length}</b>
+            </h2>
+            <table className="w-full md:w-auto">
                 <thead>
                     <tr className="border-b-2">
-                        <td className="p-2 border-r-2">
-                            {" "}
+                        <td className="p-2 border-r-2 text-right">
                             <input
                                 id={"checkbox-all-present"}
                                 type="checkbox"
@@ -131,26 +134,35 @@ export default function PlayerList() {
                 </thead>
                 <tbody>{playerItems}</tbody>
             </table>
-
+            <h2 className="text-lg">
+                Antal närvarande: <b>{players.filter((p) => p.present).length}</b>
+            </h2>
             <div className="border-t-2 mt-4"></div>
             <b>Ny spelare</b>
             <br />
-            <form method="post" onSubmit={SubmitAddPlayer}>
-                <table>
-                    <thead>
-                        <tr>
-                            <td>Förnamn</td>
-                            <td>Efternamn</td>
-                            <td>Födelseår</td>
-                        </tr>
-                    </thead>
+            <form id="addPlayerForm" method="post" onSubmit={SubmitAddPlayer}>
+                <table className="w-full md:w-auto">
                     <tbody>
                         <tr>
                             <td>
-                                <input type="text" className="p-1 m-1 border-2" name="givenName"></input>
+                                {" "}
+                                <label htmlFor="givenName">Förnamn</label>
+                            </td>
+                            <td>
+                                <input type="text" className="p-1 m-1 border-2" name="givenName" required></input>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label htmlFor="surname">Efternamn</label>
                             </td>
                             <td>
                                 <input type="text" className="p-1 m-1 border-2" name="surname"></input>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label htmlFor="birthyear">Födelseår</label>
                             </td>
                             <td>
                                 <input type="number" className="p-1 m-1 border-2" name="birthyear"></input>
