@@ -1,6 +1,6 @@
 "use client";
 
-import { Player, Game, Round, Result as GameResult } from "@prisma/client";
+import { Player, Game, Round, Result as GameResult, Tournament } from "@prisma/client";
 import { useState, useEffect } from "react";
 import { Seed, Pairing } from "./seeding-algorithm";
 import Image from "next/image";
@@ -21,6 +21,7 @@ type RoundWithGames = Round & {
         blackPlayer: Player;
         whitePlayer: Player;
     })[];
+    tournament: Tournament;
 };
 
 function IsSeeded(player: PlayerWithGames, round: Round) {
@@ -274,9 +275,7 @@ export default function Seeder() {
 
     return (
         <>
-            <h1 className="text-xl">
-                Rond nummer {round.id}, startade {round.date.toLocaleString()}
-            </h1>
+            <h1 className="text-xl">Turnering: {round.tournament.name}</h1>
             <div className="flex flex-wrap min-h-full flex-1">
                 {unseeded?.length > 0 && (
                     <div className="flex-1 border-r-2 border-r-yellow-700">

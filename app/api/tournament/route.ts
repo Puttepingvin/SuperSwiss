@@ -23,5 +23,10 @@ export async function POST(request: Request) {
         data: { active: true },
     });
 
+    await prisma.round.updateMany({
+        where: { finished: false },
+        data: { tournamentId: data.id },
+    });
+
     return NextResponse.json({});
 }

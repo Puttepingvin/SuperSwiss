@@ -4,12 +4,15 @@ import Players from "@/app/players/page";
 import { Prisma, Tournament, Player, Round, Game, Result } from "@prisma/client";
 import { GET as GetTournament } from "../tournament/route";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
     let round = await prisma.round.findFirst({
         orderBy: { date: "desc" },
-        include: { games: { include: { blackPlayer: true, whitePlayer: true } } },
+        include: {
+            games: { include: { blackPlayer: true, whitePlayer: true } },
+            tournament: true,
+        },
     });
 
     if (!round) {
@@ -18,7 +21,13 @@ export async function GET(request: Request) {
             tournament: { connect: { id: activeTournament.id } },
         };
 
-        round = await prisma.round.create({ data: newRound, include: { games: { include: { blackPlayer: true, whitePlayer: true } } } });
+        round = await prisma.round.create({
+            data: newRound,
+            include: {
+                games: { include: { blackPlayer: true, whitePlayer: true } },
+                tournament: true,
+            },
+        });
     }
 
     return NextResponse.json(round);
