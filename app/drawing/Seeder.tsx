@@ -275,7 +275,7 @@ export default function Seeder() {
 
     return (
         <>
-            <h1 className="text-xl">Turnering: {round.tournament.name}</h1>
+            <h1 className="text-xl">Turnering: {round.tournament?.name}</h1>
             <div className="flex flex-wrap min-h-full flex-1">
                 {unseeded?.length > 0 && (
                     <div className="flex-1 border-r-2 border-r-yellow-700">
