@@ -2,8 +2,8 @@
 
 import { usePathname } from "next/navigation";
 
-const pages: string[] = ["Spelare", "Lottning", "Turnering"];
-const pagesEnglish: string[] = ["/players", "/drawing", "/tournament"];
+const pages: string[] = ["Spelare", "Lottning", "Turnering", "Ställning", "Närvaro"];
+const pagesEnglish: string[] = ["/players", "/drawing", "/tournament", "/standing", "/term"];
 
 export default function NavBar() {
     const pathname = usePathname();
