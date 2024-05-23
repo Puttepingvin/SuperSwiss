@@ -7,10 +7,12 @@ import prisma from "@/libs/prisma";
 const startelo = 1000;
 
 export async function GET() {
-    const activeTournament: Tournament = await (await GetTournament()).json();
+    const activeTournament: Tournament | null = await prisma.tournament.findFirst({
+        where: { active: true },
+    });
 
     const statistics = await prisma.tournamentPlayerStatistics.findMany({
-        where: { tournamentId: activeTournament.id },
+        where: { tournamentId: activeTournament?.id },
         include: { player: true },
     });
 
