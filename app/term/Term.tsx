@@ -19,7 +19,7 @@ export default function Term() {
     useEffect(() => {
         fetch("/api/rounds", {
             method: "GET",
-            cache: "no-cache",
+            cache: "no-store",
             headers: {
                 "content-type": "application/json",
             },

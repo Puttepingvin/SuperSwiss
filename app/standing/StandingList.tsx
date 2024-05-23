@@ -26,7 +26,7 @@ export default function StandingList() {
     useEffect(() => {
         fetch("/api/standing", {
             method: "GET",
-            cache: "no-cache",
+            cache: "no-store",
             headers: {
                 "content-type": "application/json",
             },
@@ -39,7 +39,7 @@ export default function StandingList() {
 
         fetch("/api/games", {
             method: "GET",
-            cache: "no-cache",
+            cache: "no-store",
             headers: {
                 "content-type": "application/json",
             },
