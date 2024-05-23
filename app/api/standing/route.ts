@@ -6,6 +6,8 @@ import prisma from "@/libs/prisma";
 
 const startelo = 1000;
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
     const activeTournament: Tournament | null = await prisma.tournament.findFirst({
         where: { active: true },

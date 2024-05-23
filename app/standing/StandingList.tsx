@@ -18,6 +18,8 @@ type GameWithPlayers = Game & {
     whitePlayer: Player;
 };
 
+export const dynamic = "force-dynamic";
+
 export default function StandingList() {
     const [statistics, setStatistics] = useState<Array<StatisticWithPlayer>>([]);
     const [games, setGames] = useState<Array<GameWithPlayers>>([]);
