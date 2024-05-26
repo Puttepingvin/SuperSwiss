@@ -7,11 +7,8 @@ import prisma from "@/libs/prisma";
 const startelo = 1000;
 
 export async function GET() {
-    const activeTournament: Tournament = await (await GetTournament()).json();
-
     const rounds = await prisma.round.findMany({
-        where: { tournamentId: activeTournament.id },
-        include: { games: { include: { blackPlayer: true, whitePlayer: true } } },
+        include: { games: { include: { blackPlayer: true, whitePlayer: true }, }, tournament : true },
     });
 
     return NextResponse.json(rounds);
