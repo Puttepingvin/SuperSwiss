@@ -9,9 +9,9 @@ type RoundWithGames = Round & {
     games: (Game & {
         blackPlayer: Player;
         whitePlayer: Player;
-    })[],
+    })[];
 
-    tournament : Tournament;
+    tournament: Tournament;
 };
 
 export default function Term() {
@@ -32,7 +32,7 @@ export default function Term() {
                 setRounds(json);
                 setLoading(false);
             });
-        
+
         fetch("/api/tournaments", {
             method: "GET",
             cache: "no-cache",
@@ -47,22 +47,22 @@ export default function Term() {
             });
     }, []);
 
-
     async function SetTournament(e: FormEvent<HTMLFormElement>) {
         e.preventDefault();
 
         console.log(e);
 
-        const tournamentId: number = +(((e.target as HTMLFormElement).getElementsByTagName("select")[0] as HTMLSelectElement).value as string)
+        const tournamentId: number = +(((e.target as HTMLFormElement).getElementsByTagName("select")[0] as HTMLSelectElement)
+            .value as string);
 
-        const roundId: number = +(((e.target as HTMLFormElement).getElementsByTagName("input")[0] as HTMLInputElement).value as string)
+        const roundId: number = +(((e.target as HTMLFormElement).getElementsByTagName("input")[0] as HTMLInputElement).value as string);
 
         fetch("/api/move-round", {
             method: "POST",
             body: JSON.stringify({ id: roundId, tournamentId: tournamentId }),
         }).then((res) => {
             if (res.status != 200) {
-                window.alert("Misslyckades ass byta")
+                window.alert("Misslyckades ass byta");
             }
         });
     }
@@ -84,8 +84,9 @@ export default function Term() {
                     "/" +
                     (new Date(round.date).getMonth() + 1)}
             </h1>
+            <h2>{round.tournament.name}</h2>
             <form onSubmit={SetTournament} key={round.id}>
-                <input hidden value={round.id}/>
+                <input hidden value={round.id} />
                 <select
                     id="tournamentPicker"
                     className="p-1 text-black bg-white border-2 m-2 w-64"
